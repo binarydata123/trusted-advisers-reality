@@ -1,5 +1,88 @@
 @import "tailwindcss";
 
+@theme {
+  --color-navy: #0a192f;
+  --color-blue: #1e40af;
+  --color-accent: #dc2626;
+  --color-gold: #d97706;
+  --font-sans: "Inter", Arial, Helvetica, sans-serif;
+  --font-heading: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+}
+
+#blog .grid {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 0.25rem;
+  margin: -0.25rem;
+}
+
+#blog .grid::-webkit-scrollbar { display: none; }
+
+#blog article {
+  flex: 0 0 86%;
+  scroll-snap-align: start;
+}
+
+.testimonial-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 350ms ease, box-shadow 350ms ease, border-color 350ms ease;
+}
+
+#testimonials {
+  background: linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%);
+}
+
+.testimonial-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #dc2626, #f59e0b);
+  opacity: 0;
+  transition: opacity 350ms ease;
+}
+
+.testimonial-active {
+  transform: scale(1.08) translateY(-8px);
+  border: 2px solid rgb(220 38 38 / 0.45);
+  box-shadow: 0 24px 48px rgb(15 23 42 / 0.22), 0 0 0 8px rgb(220 38 38 / 0.06);
+  z-index: 1;
+  animation: testimonial-focus 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.testimonial-active::before { opacity: 1; }
+
+.testimonial-active .text-xl { text-shadow: 0 2px 8px rgb(245 158 11 / 0.35); }
+
+.testimonial-sliding {
+  opacity: 0.55;
+  transform: translateX(-28px) scale(0.97);
+  transition: transform 260ms ease, opacity 260ms ease;
+}
+
+@keyframes testimonial-focus {
+  0% { opacity: 0.84; transform: scale(0.98) translateY(0); }
+  65% { transform: scale(1.1) translateY(-10px); }
+  100% { opacity: 1; transform: scale(1.08) translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .testimonial-active { animation: none; }
+}
+
+@media (max-width: 767px) {
+  .testimonial-active { transform: scale(1.03) translateY(-4px); }
+}
+
+@media (min-width: 768px) {
+  #blog article { flex-basis: calc((100% - 4rem) / 3); }
+  #testimonials > div > .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,19 +91,182 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
+
+main > footer:not(.site-footer) { display: none; }
+
+.site-footer > div > .grid.gap-6 { display: none; }
+
+html { scroll-behavior: smooth; }
+
+main.min-h-screen { display: flex; flex-direction: column; }
+main.min-h-screen > div:first-child { order: 0; }
+main.min-h-screen > header { order: 1; }
+main.min-h-screen > section { order: 10; }
+main.min-h-screen > section:first-of-type { order: 2; }
+main.min-h-screen > #about-us { order: 3 !important; display: block !important; visibility: visible !important; }
+main.min-h-screen > #search { order: 4 !important; }
+main.min-h-screen > footer { order: 99; }
+
+main.min-h-screen > div:first-child {
+  font-size: 0.84rem;
+  letter-spacing: 0.01em;
+}
+
+main.min-h-screen > div:first-child a {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+main.min-h-screen > div:first-child a:hover { color: #ffffff; }
+
+a, button, select, input, textarea { cursor: pointer; }
+
+header a[href="#valuation"]::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.5rem;
+  transition: transform 180ms ease;
+}
+
+header a[href="#valuation"] {
+  position: relative;
+  overflow: hidden;
+  gap: 0.15rem;
+  background-image: linear-gradient(135deg, #dc2626 0%, #ef4444 55%, #b91c1c 100%);
+  box-shadow: 0 7px 16px rgb(220 38 38 / 0.25);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+header a[href="#valuation"]::before {
+  content: "🏷️";
+  position: static;
+  display: inline-block;
+  width: auto;
+  margin-right: 0.35rem;
+  transform: none;
+  background: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  filter: grayscale(1) brightness(0) invert(1);
+  transition: transform 180ms ease;
+}
+
+header a[href="#valuation"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 11px 22px rgb(220 38 38 / 0.35);
+  filter: saturate(1.12);
+}
+
+header a[href="#valuation"]:hover::before { transform: rotate(-12deg) scale(1.12); }
+header a[href="#valuation"]:hover::after { transform: translateX(3px); }
+
+header > div > a.flex.items-center.gap-3,
+.site-footer a.inline-flex.items-center.gap-3 {
+  display: block;
+  width: 202px;
+  height: 54px;
+  background-image: url("/logo/Trusted%20adviser%20logo%20final%2030Sept19-01.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+header > div > a.flex.items-center.gap-3 > *,
+.site-footer a.inline-flex.items-center.gap-3 > * { display: none; }
+
+.site-footer a.inline-flex.items-center.gap-3 {
+  width: 210px;
+  height: 70px;
+}
+
+button { transition: transform 180ms ease; }
+
+input, textarea, select { transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease; }
+
+input:hover, textarea:hover, select:hover { border-color: color-mix(in srgb, #1e40af 45%, #cbd5e1); }
+
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+  outline: 3px solid rgba(245, 158, 11, 0.7);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  button:hover { transform: translateY(-1px); }
+
+  a:not([aria-label]):hover { filter: brightness(1.08); }
+
+  article { transition: transform 180ms ease, box-shadow 180ms ease; }
+  article:hover { transform: translateY(-4px); }
+
+  .site-footer a:hover { transform: translateY(-1px); }
+
+  .process-card { transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }
+  .process-card:hover { transform: translateY(-6px); border-color: rgb(30 64 175 / 0.28); box-shadow: 0 18px 35px rgb(30 64 175 / 0.12); }
+
+  #sell-options .grid.gap-8 > div {
+    position: relative;
+    overflow: hidden;
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease;
+  }
+
+  #sell-options .grid.gap-8 > div::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg, #dc2626, #f59e0b);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 220ms ease;
+  }
+
+  #sell-options .grid.gap-8 > div:last-child::before { background: linear-gradient(90deg, #1e40af, #38bdf8); }
+
+  #sell-options .grid.gap-8 > div:hover {
+    transform: translateY(-7px);
+    border-color: rgb(30 64 175 / 0.35);
+    box-shadow: 0 20px 38px rgb(15 23 42 / 0.12);
+  }
+
+  #sell-options .grid.gap-8 > div:hover::before { transform: scaleX(1); }
+
+  #sell-options .grid.gap-8 > div:first-child:hover { border-color: rgb(220 38 38 / 0.38); }
+
+  #sell-options .grid.gap-8 > div > div:first-child {
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  #sell-options .grid.gap-8 > div:hover > div:first-child {
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 8px 18px rgb(15 23 42 / 0.15);
+  }
+
+  section:first-of-type .grid.max-w-xl > div {
+    transition: transform 200ms ease, border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  section:first-of-type .grid.max-w-xl > div:hover {
+    transform: translateY(-4px);
+    border-color: rgb(220 38 38 / 0.7);
+    background-color: rgb(255 255 255 / 0.1);
+    box-shadow: 0 10px 25px rgb(220 38 38 / 0.12);
+  }
+
+  section:first-of-type a[href="#valuation"], section:first-of-type a[href="#sell-options"] {
+    transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+  }
+
+  section:first-of-type a[href="#valuation"]:hover, section:first-of-type a[href="#sell-options"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgb(15 23 42 / 0.35);
+  }
 }
